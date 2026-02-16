@@ -370,7 +370,19 @@ function Expensify() {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want this effect to re-run when conciergeReportID changes
     }, [sessionMetadata?.status, conciergeReportID, introSelected]);
+     useEffect(() => {
+        const handleEmbeddedDemoMessage = (event: MessageEvent) => {
+            if (event.data?.type === 'goToHomeFromEmbeddedPage') {
+                Navigation.navigate(ROUTES.HOME);
+            }
+        };
 
+        window.addEventListener('message', handleEmbeddedDemoMessage);
+
+        return () => {
+            window.removeEventListener('message', handleEmbeddedDemoMessage);
+        };
+    }, []);
     useLayoutEffect(() => {
         if (!isNavigationReady || !lastRoute) {
             return;
